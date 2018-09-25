@@ -15,4 +15,4 @@ npm run dev
 npm run build
 ```
 
-Try here [link to the app](https://carlosequirozv.github.io/vue-calculator/).
+Try the application [here](https://carlosequirozv.github.io/vue-calculator/).

@@ -8,7 +8,7 @@ export default {
         operator: null,
         operatorClicked: false,
         sign: '',
-        end = false
+        end: false
       }
     }
   },

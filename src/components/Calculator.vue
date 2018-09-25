@@ -6,7 +6,9 @@ export default {
         previous: null,
         current: '',
         operator: null,
-        operatorClicked: false
+        operatorClicked: false,
+        sign: '',
+        end = false
       }
     }
   },
@@ -15,18 +17,23 @@ export default {
       this.calculator.current = ''
     },
     sign() {
-      this.calculator.current = this.calculator.current.charAt(0) === '-' ?
-      this.calculator.current.slice(1) : `-${this.calculator.current}`
+      if(this.calculator.current != '')
+        this.calculator.current = this.calculator.current.charAt(0) === '-' ?
+          this.calculator.current.slice(1) : `-${this.calculator.current}`
     },
     percent() {
       this.calculator.current = `${parseFloat(this.calculator.current) / 100}`
     },
     append(number) {
-      if(this.calculator.operatorClicked) {
+      if(number == '0' && this.calculator.current == '')
         this.calculator.current = ''
-        this.calculator.operatorClicked = false
+      else {
+        if(this.calculator.operatorClicked) {
+          this.calculator.current = ''
+          this.calculator.operatorClicked = false
+        }
+        this.calculator.current = `${this.calculator.current}${number}`
       }
-      this.calculator.current = `${this.calculator.current}${number}`
     },
     dot() {
       if (this.calculator.current.indexOf('.') === -1)
@@ -39,18 +46,22 @@ export default {
     divide() {
       this.calculator.operator = (a, b) => a / b
       this.setPrevious()
+      this.calculator.sign = '÷'
     },
     times() {
       this.calculator.operator = (a, b) => a * b
       this.setPrevious()
+      this.calculator.sign = 'x'
     },
     minus() {
       this.calculator.operator = (a, b) => a - b
       this.setPrevious()
+      this.calculator.sign = '-'
     },
     add() {
       this.calculator.operator = (a, b) => a + b
       this.setPrevious()
+      this.calculator.sign = '+'
     },
     equal() {
       this.calculator.current = this.calculator.operator(
@@ -58,6 +69,8 @@ export default {
         parseFloat(this.calculator.current)
       )
       this.calculator.previous = null
+      this.calculator.sign = ''
+      this.calculator.end = true
     },
     del() {
       if(this.calculator.current)
@@ -81,6 +94,7 @@ export default {
 <template>
   <div class="container">
     <div class="calculator">
+      <div class="prev">{{ calculator.previous || '' }} {{ calculator.sign }}</div>
       <div class="display">{{ calculator.current || '0' }}</div>
       <div @click="percent" class="btn operator">%</div>
       <div @click="sqrt" class="btn operator">&#x221a;</div>
@@ -114,12 +128,13 @@ export default {
 
 .calculator {
   margin: 0 auto;
-  width: 300px;
-  height: 400px;
+  width: 250px;
+  height: 450px;
   text-align: center;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-auto-rows: minmax(30px, auto);
+  box-shadow: 5px 10px 8px #888888;
 }
 
 .display {
@@ -131,6 +146,15 @@ export default {
   background-color: #333;
   color: #fff;
 }
+.prev {
+  grid-column:  1 / 5;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #eee
+}
 
 .c {
   grid-column:  1 / 3;
@@ -138,14 +162,17 @@ export default {
 
 .btn {
   background-color: #f2f2f2;
-  border: 1px solid #999;
+  border: 1px solid #333;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+.btn:hover { background-color: rgb(33.8%, 86.6%, 50.5%); cursor: pointer; }
 
-.operator { background-color: chocolate }
-.operator2 { background-color: coral }
+.operator { background-color:rgb(34.7%, 53.3%, 84.7%) }
+.operator:hover { background-color: rgb(21.9%, 37.6%, 64%); cursor: pointer; }
+.operator2 { background-color: rgb(32.1%, 50.5%, 81.6%) }
+.operator2:hover { background-color: rgb(21.9%, 37.6%, 64%); cursor: pointer; }
 
 </style>
 
